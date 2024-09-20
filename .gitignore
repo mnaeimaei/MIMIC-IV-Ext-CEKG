@@ -161,3 +161,8 @@ cython_debug/
 #.idea/
 
 
+/Scripts/Step02_Stage03_Part01_Importing_SCT/Script02_Description.txt
+/Scripts/Step02_Stage03_Part01_Importing_SCT/Script03_Relationship.txt
+/Scripts/Step02_Stage03_Part01_Importing_SCT/Script04_TextDefinition.txt
+/Scripts/Step02_Stage02_OHSI_mapper/Script02_CONCEPT.csv
+/Scripts/Step02_Stage02_OHSI_mapper/Script03_CONCEPT_RELATIONSHIP.csv
