@@ -38,6 +38,9 @@ En4_ID as Entity4_ID,
 Ent5 as Entity5_origin,
 En5_ID as Entity5_ID,
 
+subject_id	temp_patient_id ,
+hadm_id temp_encounter_id
+
 FROM `your-project-id1234.I01_Log.TabE05`  ;
 
 

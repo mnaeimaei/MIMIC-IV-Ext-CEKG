@@ -19,7 +19,10 @@ ID,
 Name,
 Value,
 Category,
-FROM `your-project-id1234.I02_otherEntities.TabC`  ;
+subject_id	temp_patient_id ,
+hadm_id temp_encounter_id
+
+FROM `your-project-id1234.I02_otherEntities.TabB`  ;
 '''
 
 QUERY = (query1)

@@ -19,8 +19,10 @@ SELECT
 Entity_Origin1 as Origin1,
 Entity_ID1 as ID1,
 Entity_Origin2 as Origin2,
-Entity_ID2 as ID2
-FROM `your-project-id1234.I03_EntityRel.TabC`  ;
+Entity_ID2 as ID2,
+subject_id	temp_patient_id ,
+hadm_id temp_encounter_id
+FROM `your-project-id1234.I03_EntityRel.TabB`  ;
 
 
 

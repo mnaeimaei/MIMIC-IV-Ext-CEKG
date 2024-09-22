@@ -19,9 +19,11 @@ SELECT
 Activity_Properties_ID as Activity_Attributes_ID,
 Activity	,
 Activity_Synonym	,
-featureName as Attribute,
-featureValue as Attribute_Value                
-FROM `your-project-id1234.I04_actPro.TabA1` ;
+featureName as Activity_Attribute,
+featureValue as Activity_Attribute_Value ,
+subject_id	temp_patient_id ,
+hadm_id temp_encounter_id
+FROM `your-project-id1234.I04_actPro.TabB1` ;
 
 '''
 
