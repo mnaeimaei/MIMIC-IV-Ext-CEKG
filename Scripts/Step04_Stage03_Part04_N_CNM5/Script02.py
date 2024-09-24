@@ -13,7 +13,9 @@ client = bigquery.Client()
 query1 = f'''            
 
 CREATE TABLE `your-project-id1234.I17_DK7.TabA`  AS
-SELECT distinct Activity_Value_ID FROM `your-project-id1234.I01_Log.TabC01` ;
+SELECT distinct Activity_Value_ID FROM `your-project-id1234.I01_Log.TabC01` 
+where Activity_Value_ID is not null
+;
 
 
 '''
