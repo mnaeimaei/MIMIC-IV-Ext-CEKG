@@ -5,7 +5,7 @@ This README file explains how to reproduce the MIMIC-IV-Ext-CEKG dataset as it i
 # Step1: Setting Up Infrastructure and Tools for Dataset Creation
 
 
-## Stage 1: Creating a Google Cloud SQL Service Account
+## Sub-step 1: Creating a Google Cloud SQL Service Account
 We used Google BigQuery (BQ) as the relational database management system (RDBMS) and executed queries through Python scripts. However, you can use other RDBMS platforms, though this will require adapting the queries to fit the specific system. If you wish to send queries from Python to Google BigQuery, a Google Cloud service key is required. Alternatively, if you prefer to run the queries directly in Google BigQuery, you can simply copy and paste the queries from the Python files to achieve the same results.
 
 The following are the steps for creating a Google Cloud service account.
@@ -33,7 +33,7 @@ The following are the steps for creating a Google Cloud service account.
 **Important**: After downloading your service account key, store it in a secure location on your computer.
 
 
-## Stage 2: Create a Python Project
+## Sub-step 2: Create a Python Project
 
 First, set up the Python project with a virtual environment. Once the virtual environment is activated, install the following packages using pip:
 
@@ -45,7 +45,7 @@ pip install pandas-gbq
 ```
 
 
-## Stage 3: Clone or Download the Repository and Organize the Files in the Python Project
+## Sub-step 3: Clone or Download the Repository and Organize the Files in the Python Project
 
 Download or clone the repository. Ensure you download the **Scripts** directory.
 
@@ -58,7 +58,7 @@ Below is a tree-like structure illustrating how to organize your files:
 <img src="./README_resources/0_tree.png" alt="Alt text" width="300" height="1000"/>
 
 
-## Stage 4: Change the Project ID
+## Sub-step 4: Change the Project ID
 
 To update the project ID used in your Python project:
 
@@ -75,7 +75,7 @@ These steps ensure that the scripts within your project are correctly configured
 
 # Step2: Preparation of Input Data
 
-## Stage 1 - Part 1: Access to MIMIC-IV Modules
+## Sub-step 1 - Part 1: Access to MIMIC-IV Modules
 
 To work with the MIMIC-IV dataset, you will need to access various modules on Google Cloud BigQuery. Below are the links to each module and where to find the associated data:
 
@@ -87,7 +87,7 @@ Ensure you have the appropriate permissions and access granted by PhysioNet for 
 
 
 
-## Stage 1 - Part 2: Copy MIMIC-IV Modules to Your Project on Google BigQuery
+## Sub-step 1 - Part 2: Copy MIMIC-IV Modules to Your Project on Google BigQuery
 
 You will need to ensure that the MIMIC data modules are correctly transferred to your Google BigQuery environment, enabling you to work with them directly in your project. To transfer the necessary MIMIC modules to your Google BigQuery project:
 
@@ -98,7 +98,7 @@ You will need to ensure that the MIMIC data modules are correctly transferred to
    - Run the queries to copy the required MIMIC modules to your project.
 
 
-## Stage 1 - Part 3: Categorizing the Tables of the Dataset for Further Analysis
+## Sub-step 1 - Part 3: Categorizing the Tables of the Dataset for Further Analysis
 
 To facilitate easier analysis, we organize the dataset's tables into different categories by creating a new database structure. This is accomplished using the script located in `Step02_Stage01_Part03_Categorizing`. This reorganization involves various operations on the tables:
 
@@ -106,7 +106,7 @@ To facilitate easier analysis, we organize the dataset's tables into different c
 - **Splitting Tables**: For some tables, we split the data into different columns based on specific criteria, creating segmented tables that focus on particular aspects.
 - **Joining Tables**: We perform left joins on certain tables, merging them based on relevant columns, then transfer the resulting new table to the newly created database.
 
-The details of each operation, including the specific scripts used and the transformations applied, are outlined in the tables below. This structured approach ensures that the data is optimally organized for subsequent analysis stages.
+The details of each operation, including the specific scripts used and the transformations applied, are outlined in the tables below. This structured approach ensures that the data is optimally organized for subsequent analysis sub-steps.
 
 
 | Script Name          | Source Database Name | Source Table Name        | Destination Database Name | Destination Table Name | Destination Table Columns                                          |
@@ -154,7 +154,7 @@ The details of each operation, including the specific scripts used and the trans
 
 
 
-## Stage 2: Creating ICD-SCT mapper using the OHSI
+## Sub-step 2: Creating ICD-SCT mapper using the OHSI
 
 In this step, we create a mapper between ICD-10 codes and SNOMED CT codes using the OHDSI Athena vocabulary system. 
 
@@ -167,7 +167,7 @@ In this step, we create a mapper between ICD-10 codes and SNOMED CT codes using 
    - **Ruilding the ICD-SNOMEDCT mapper**: Execute the scripts located in the `Step02_Stage02_OHSI_mapper` directory.
 
 
-## Stage 3 - Part 1: Importing SNOMED CT Data
+## Sub-step 3 - Part 1: Importing SNOMED CT Data
 
 In this step, we import the SNOMED CT terminology into our project.
 
@@ -178,7 +178,7 @@ In this step, we import the SNOMED CT terminology into our project.
      - **Text Definitions**: `sct2_TextDefinition_Full-en_INT_20240601.txt` - Provides detailed definitions of SNOMED CT terms in English. Rename the file to `Script04_TextDefinition.txt` and Move the renamed file into the `Step02_Stage03_Part01_Importing_SCT` directory
    - Finally, execute the scripts located in the `Step02_Stage03_Part01_Importing_SCT` directory.
 
-## Stage 3 - Part 2: Processing and Extracting SNOMED CT Data
+## Sub-step 3 - Part 2: Processing and Extracting SNOMED CT Data
 
 In this step, we process the SNOMED CT data imported in the previous step to extract detailed information into two structured tables. To achieve:Execute the scripts located in the `Step02_Stage03_Part02_Processing_SCT` directory.
 
@@ -208,7 +208,7 @@ This table details the relationships between SNOMED CT concepts:
 # Step3: Creation of Tables Related to Events
 
 
-## Stage 1: Creating Identifier-Based Time Range Tables (IDTR)
+## Sub-step 1: Creating Identifier-Based Time Range Tables (IDTR)
 
 In this step, we create tables for every possible combination of MIMIC-IV identifiers, including `subject_id`, `hadm_id`, `stay_id`, and `transfer_id`. Each table captures the maximum timestamp, minimum timestamp, latest date, and earliest date for each unique instance of these combinations. Below are the table schemas showing the combinations of identifiers and the corresponding columns they capture:
 
@@ -291,60 +291,60 @@ We may have two types of records based on whether the min and max timestamps are
 Finally, we merge this final table back with the original table to add the complete timestamp information. 
 
 
-## Stage 2 – Part 1: IDTR Enrichment for OMR Data
-In this stage, after preprocessing the OMR table, Since it lacks the `hadm_id`  and the time part of `chartdate`  , we first create a new table with only distinct pairs of `subject_id`  and `chartdate`  . Then we perform a left join with the SH table (one of the IDTR tables) , which has `hadm_id`  and `min` and `max` timestamps, matching on `subject_id`  and ensuring the `chartdate`   falls within a date range from the SH table. This step doesn't always result in a match, leaving some fields blank. 
+## Sub-step 2 – Part 1: IDTR Enrichment for OMR Data
+In this sub-step, after preprocessing the OMR table, Since it lacks the `hadm_id`  and the time part of `chartdate`  , we first create a new table with only distinct pairs of `subject_id`  and `chartdate`  . Then we perform a left join with the SH table (one of the IDTR tables) , which has `hadm_id`  and `min` and `max` timestamps, matching on `subject_id`  and ensuring the `chartdate`   falls within a date range from the SH table. This step doesn't always result in a match, leaving some fields blank. 
 Next, we identify how many times a distinct `subject_id`  and `chartdate`   match multiple `hadm_id`  entries. If there’s more than one match, it’s a duplicate. We then separate the dataset into two tables: one for cases where there’s a single match and another where there are multiple matches. For cases with a single match, no further action is needed. However, for cases with multiple matches, we assign a ranking number to each match, indicating the encounter number for each distinct combination of `subject_id`  and `chartdate`  . We then keep only the first ranked match and discard the others. After that, we union these two tables back together.
 For any records still lacking a `hadm_id` , we assign a default value like 0. We may have two types of records based on whether the min and max timestamps are missing or not. For records without min and max timestamps, we convert `chartdate`   to a timestamp. For records with min and max timestamps, we calculate a new timestamp. If adding 12 hours to the `chartdate`   falls within the range, we use it; otherwise, we calculate the midpoint between the min and max times.
 Finally, we merge this final table back with the original OMR table to add both the `hadm_id`  and the complete timestamp information.
 
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part01_IDTR_Enriched_OMR` directory.
 
-## Stage 2 – Part 2: IDTR Enrichment for First Day Lab Data
-In this stage, we perform a left join of the `first_day_lab` table with the `SI` table (one of the IDTR tables). The `Timestamp` is determined by adding 24 hours to the `min Timestamp` from the `SI` table where the `subject_id` and `stay_id` match those in the `first_day_lab` table.  
+## Sub-step 2 – Part 2: IDTR Enrichment for First Day Lab Data
+In this sub-step, we perform a left join of the `first_day_lab` table with the `SI` table (one of the IDTR tables). The `Timestamp` is determined by adding 24 hours to the `min Timestamp` from the `SI` table where the `subject_id` and `stay_id` match those in the `first_day_lab` table.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part02_IDTR_Enriched_Lab` directory.
 
-## Stage 2 – Part 3: IDTR Enrichment for Blood Gas Data
-In this stage, we perform separate left joins for the `first_day_bg` and `first_day_bg_art` tables with the `SI` table (one of the IDTR tables). Timestamps are added by appending 24 hours to the `min Timestamp` found in the `SI` table for matches on `subject_id` and `stay_id`.  
+## Sub-step 2 – Part 3: IDTR Enrichment for Blood Gas Data
+In this sub-step, we perform separate left joins for the `first_day_bg` and `first_day_bg_art` tables with the `SI` table (one of the IDTR tables). Timestamps are added by appending 24 hours to the `min Timestamp` found in the `SI` table for matches on `subject_id` and `stay_id`.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part03_IDTR_Enriched_BG` directory.
 
-## Stage 2 – Part 4: IDTR Enrichment for First Day GCS Data
-In this stage, we perform a left join of the `first_day_gcs` table with the `SI` table (one of the IDTR tables). A timestamp is appended to the `first_day_gcs` entries by adding 24 hours to the `min Timestamp` from the `SI` table, ensuring that matches are made on the same `subject_id` and `stay_id` as in the `first_day_gcs` table.  
+## Sub-step 2 – Part 4: IDTR Enrichment for First Day GCS Data
+In this sub-step, we perform a left join of the `first_day_gcs` table with the `SI` table (one of the IDTR tables). A timestamp is appended to the `first_day_gcs` entries by adding 24 hours to the `min Timestamp` from the `SI` table, ensuring that matches are made on the same `subject_id` and `stay_id` as in the `first_day_gcs` table.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part04_IDTR_Enriched_GCS` directory.
 
-## Stage 2 – Part 5: IDTR Enrichment for Renal Replacement Therapy (RRT) Data
-In this stage, the `first_day_rrt` table includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and add a timestamp by appending 24 hours to the `min Timestamp` where `subject_id` and `stay_id` match those in the `first_day_rrt` table.
+## Sub-step 2 – Part 5: IDTR Enrichment for Renal Replacement Therapy (RRT) Data
+In this sub-step, the `first_day_rrt` table includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and add a timestamp by appending 24 hours to the `min Timestamp` where `subject_id` and `stay_id` match those in the `first_day_rrt` table.
 
 Additionally, the `rrt` table contains `stay_id` but lacks `subject_id`. We perform a left join with the `SI` table to add `subject_id` where the `stay_id` matches.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part05_IDTR_Enriched_RRT` directory.
 
-## Stage 2 – Part 6: IDTR Enrichment for First Day Vital Sign Data
-In this stage, we enhance the `first_day_vitalsign` table, which includes `subject_id` and `stay_id` but lacks timestamp information. We perform a left join with the `SI` table (one of the IDTR tables) and append a timestamp by adding 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_vitalsign` table.  
+## Sub-step 2 – Part 6: IDTR Enrichment for First Day Vital Sign Data
+In this sub-step, we enhance the `first_day_vitalsign` table, which includes `subject_id` and `stay_id` but lacks timestamp information. We perform a left join with the `SI` table (one of the IDTR tables) and append a timestamp by adding 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_vitalsign` table.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part06_IDTR_Enriched_Vital` directory.
 
-## Stage 2 – Part 7: IDTR Enrichment for Height Data
-In this stage, we enhance the `first_day_height` table. This table includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and add a timestamp by appending 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_height` table.  
+## Sub-step 2 – Part 7: IDTR Enrichment for Height Data
+In this sub-step, we enhance the `first_day_height` table. This table includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and add a timestamp by appending 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_height` table.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part07_IDTR_Enriched_height` directory.
 
-## Stage 2 – Part 8: IDTR Enrichment for Weight Data
-In this stage, we first enhance the `first_day_weight` table, which includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and append a timestamp by adding 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_weight` table.
+## Sub-step 2 – Part 8: IDTR Enrichment for Weight Data
+In this sub-step, we first enhance the `first_day_weight` table, which includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and append a timestamp by adding 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_weight` table.
 
 Next, we consider the `weight_durations` table, which contains `stay_id` but does not include `subject_id`. We perform a left join with the `SI` table to add `subject_id` where it matches the `stay_id`.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part08_IDTR_Enriched_weight` directory.
 
-## Stage 2 – Part 9: IDTR Enrichment for Urine Output Data
-In this stage, we first enhance the `urine_output_rate` table, which includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and add a timestamp by appending 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_urine_output` table.
+## Sub-step 2 – Part 9: IDTR Enrichment for Urine Output Data
+In this sub-step, we first enhance the `urine_output_rate` table, which includes `subject_id` and `stay_id` but lacks a timestamp. We perform a left join with the `SI` table (one of the IDTR tables) and add a timestamp by appending 24 hours to the `min Timestamp` where the `subject_id` and `stay_id` match those in the `first_day_urine_output` table.
 
 Next, we focus on the `urine_output` and `urine_output_rate` tables, which contain `stay_id` but do not include `subject_id`. We perform left joins with the `SI` table to add `subject_id` where it matches the `stay_id` in each table.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part09_IDTR_Enriched_urine` directory.
 
-## Stage 2 – Part 10: IDTR Enrichment for SOFA-Related Data
-In this stage, we enhance the `first_day_sofa` table by adding a timestamp through a left join with the `SHI` table (one of the IDTR tables), matching `subject_id`, `hadm_id`, and `stay_id`. We append a timestamp by adding 24 hours to the `min Timestamp` where the `subject_id`, `hadm_id`, and `stay_id` match those in the `first_day_urine_output` table.
+## Sub-step 2 – Part 10: IDTR Enrichment for SOFA-Related Data
+In this sub-step, we enhance the `first_day_sofa` table by adding a timestamp through a left join with the `SHI` table (one of the IDTR tables), matching `subject_id`, `hadm_id`, and `stay_id`. We append a timestamp by adding 24 hours to the `min Timestamp` where the `subject_id`, `hadm_id`, and `stay_id` match those in the `first_day_urine_output` table.
 
 Next, we enhance the `sepsis3` table by adding `hadm_id` through a left join with the `SHI` table. We also enhance the `sofa` table by adding `subject_id` through a left join with the `SI` table. Finally, we add `stay_id` to the `suspicion_of_infection` table through a left join with the `SHI` table.  
 To replicate the same results: Execute the scripts found in the `Step03_Stage02_Part10_IDTR_Enriched_sofa` directory.
 
 
-## Stage 3 - Part 1: Correcting and Merging NDC Codes
+## Sub-step 3 - Part 1: Correcting and Merging NDC Codes
 
 In this step, we focused on correcting and standardizing NDC codes. 
 
@@ -371,7 +371,7 @@ In this step, we focused on correcting and standardizing NDC codes.
 To reproduce the same results, execute the scripts located in the `Step03_Stage03_Part01_Cleaning_NDC` directory sequentially.
 
 
-## Stage 3 - Part 2: Correcting and Merging Lab Data from Chemistry, Hematology, and Blood Gas
+## Sub-step 3 - Part 2: Correcting and Merging Lab Data from Chemistry, Hematology, and Blood Gas
 
 In this step, we integrated and processed data from the `2_Chemistry`, `2_Hematology`, and `2_Blood_Gas` tables. The goal was to consolidate these datasets, refine the fluid types, and enhance the labeling for clearer analysis.
 
@@ -382,74 +382,74 @@ In this step, we integrated and processed data from the `2_Chemistry`, `2_Hemato
 
 To reproduce the same results, execute the scripts located in the `Step03_Stage03_Part02_Cleaning_CHB` directory sequentially.
 
-## Stage 4 - Part 1: Segmentation and Merging of the POE Table
+## Sub-step 4 - Part 1: Segmentation and Merging of the POE Table
 
-In this stage, the `1_POE` table is divided into ten tables, each focusing on specific field types that categorize data relevant to different aspects of patient orders and events.
+In this sub-step, the `1_POE` table is divided into ten tables, each focusing on specific field types that categorize data relevant to different aspects of patient orders and events.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part01_Segment&Merge_POE` directory.
 
-## Stage 4 - Part 2: Segmentation and Merging of the 1_OMR Table
+## Sub-step 4 - Part 2: Segmentation and Merging of the 1_OMR Table
 
-In this stage, the `1_OMR` table is segmented into 5 tables based on the medical and treatment history of patients in the OMR table.
+In this sub-step, the `1_OMR` table is segmented into 5 tables based on the medical and treatment history of patients in the OMR table.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part02_Segment&Merge_OMR` directory.
 
-## Stage 4 - Part 3: Segmentation and Merging of Lab Data from Chemistry, Hematology, and Blood Gas
+## Sub-step 4 - Part 3: Segmentation and Merging of Lab Data from Chemistry, Hematology, and Blood Gas
 
-In this stage, lab tests related to chemistry, hematology, and blood gas are segmented into 35 distinct tables based on the new fluid categories.
+In this sub-step, lab tests related to chemistry, hematology, and blood gas are segmented into 35 distinct tables based on the new fluid categories.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part03_Segment&Merge_CHB` directory.
 
-## Stage 4 - Part 4: Segmentation and Merging of the KDIGO-Related Tables
+## Sub-step 4 - Part 4: Segmentation and Merging of the KDIGO-Related Tables
 
-In this stage, we combine `kdigo_creatinine`, `kdigo_stages`, and `kdigo_uo` into a single table.
+In this sub-step, we combine `kdigo_creatinine`, `kdigo_stages`, and `kdigo_uo` into a single table.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part04_Segment&Merge_KDIGO` directory.
 
-## Stage 4 - Part 5: Segmentation and Merging of the Vasopressor Data
+## Sub-step 4 - Part 5: Segmentation and Merging of the Vasopressor Data
 
-In this stage, we focus on preprocessing data related to vasopressor (VASO) agents. We handle data from nine tables: `vasoactive_agent`, `dobutamine`, `dopamine`, `epinephrine`, `milrinone`, `norepinephrine`, `norepinephrine_equivalent_dose`, `phenylephrine`, and `vasopressin`. We combine the data from the aforementioned nine tables into a single table.
+In this sub-step, we focus on preprocessing data related to vasopressor (VASO) agents. We handle data from nine tables: `vasoactive_agent`, `dobutamine`, `dopamine`, `epinephrine`, `milrinone`, `norepinephrine`, `norepinephrine_equivalent_dose`, `phenylephrine`, and `vasopressin`. We combine the data from the aforementioned nine tables into a single table.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part05_Segment&Merge_VASO` directory.
 
-## Stage 4 - Part 6: Segmentation and Merging of the Blood Gas Tables
+## Sub-step 4 - Part 6: Segmentation and Merging of the Blood Gas Tables
 
-In this stage, we union the `first_day_bg` and `first_day_bg_art` tables to form a consolidated table that includes comprehensive blood gas data from the first day of admission.
+In this sub-step, we union the `first_day_bg` and `first_day_bg_art` tables to form a consolidated table that includes comprehensive blood gas data from the first day of admission.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part06_Segment&Merge_BG` directory.
 
-## Stage 4 - Part 7: Segmentation and Merging of the Renal Replacement Therapy (RRT) Data
+## Sub-step 4 - Part 7: Segmentation and Merging of the Renal Replacement Therapy (RRT) Data
 
 In this step, we union the `first_day_rrt` and `rrt` tables to create a final table that captures all RRT-related data.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part07_Segment&Merge_RRT` directory.
 
-## Stage 4 - Part 8: Segmentation and Merging of the Height Data
+## Sub-step 4 - Part 8: Segmentation and Merging of the Height Data
 
 In this step, we union the `first_day_height` and `height` tables to form a final table that captures all relevant height data.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part08_Segment&Merge_Height` directory.
 
-## Stage 4 - Part 9: Segmentation and Merging of the Weight Data
+## Sub-step 4 - Part 9: Segmentation and Merging of the Weight Data
 
 In this step, we union the `first_day_weight` and `weight_durations` tables to form a final table that encapsulates all relevant weight data.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part09_Segment&Merge_Weight` directory.
 
-## Stage 4 - Part 10: Segmentation and Merging of the Urine Output Data
+## Sub-step 4 - Part 10: Segmentation and Merging of the Urine Output Data
 
 In this step, we combine the `first_day_urine_output`, `urine_output`, and `urine_output_rate` tables into a single table that encapsulates all relevant urine output data.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part10_Segment&Merge_Urine` directory.
 
-## Stage 4 - Part 11: Segmentation and Merging of the SOFA-Related Data
+## Sub-step 4 - Part 11: Segmentation and Merging of the SOFA-Related Data
 
 In this step, we split the `suspicion_of_infection` table into three separate tables: `antibiotic`, `suspected_infection`, and `culture`.
 
 To achieve the same results, execute the scripts located in the `Step03_Stage04_Part11_Segment&Merge_SOFA` directory.
 
 
-## Stage 5: Activity Integration
+## Sub-step 5: Activity Integration
 
 In this step, we catalog clinical activities. We have discovered 95 distinct activities, and the results are organized into two tables for each activity instance.
 
@@ -482,11 +482,11 @@ In this step, we catalog clinical activities. We have discovered 95 distinct act
 To replicable results in your project: Execute the scripts located in the `Step03_Stage05_Activity_Integration` directory.
 
 
-## Stage 6 Part 1: Creating the Final Table - the Event Log
+## Sub-step 6 Part 1: Creating the Final Table - the Event Log
 
-In this stage, we consolidate all `Activity Instances` tables created in stage 5 into a single event log table. We then perform preprocessing to address instances of missing `hadm_id` and ensure that the data accurately reflects patient encounters.
+In this sub-step, we consolidate all `Activity Instances` tables created in sub-step 5 into a single event log table. We then perform preprocessing to address instances of missing `hadm_id` and ensure that the data accurately reflects patient encounters.
 
-**1. Table Consolidation**: we Combined all activity instance tables from stage 5 into one comprehensive event log table.
+**1. Table Consolidation**: we Combined all activity instance tables from sub-step 5 into one comprehensive event log table.
 
 **2. Preprocessing Missing `hadm_id`**:
    - we identified and evaluated instances where `hadm_id` is null to determine whether these should be corrected based on surrounding data or not.
@@ -520,39 +520,39 @@ To replicable results in your project: Execute the scripts located in the `Step0
 
 
 
-## Stage 6 Part 2: Creating the Final Table - the Activity Attributes
+## Sub-step 6 Part 2: Creating the Final Table - the Activity Attributes
 
-In this stage, we consolidated the `Activity Properties` table created in Stage 5 to form a comprehensive Activity Attributes table.
+In this sub-step, we consolidated the `Activity Properties` table created in Sub-step 5 to form a comprehensive Activity Attributes table.
 
 To replicable results in your project: Execute the scripts located in the `Step03_Stage06_Part02_E_ActivityAttributes` directory.
 
 
-## Stage 6 Part 3: Creating the Final Table - the Activities Domain
+## Sub-step 6 Part 3: Creating the Final Table - the Activities Domain
 
-In this stage, we categorized the 95 activities discovered in previous steps into 7 distinct domains manually. 
+In this sub-step, we categorized the 95 activities discovered in previous steps into 7 distinct domains manually. 
 
 To replicable results in your project: Execute the scripts located in the `Step03_Stage06_Part03_F_ActivitiesDomain` directory.
 
 
-## Stage 6 Part 4: Creating the Final Table - the Constrainted Node mapping 3
+## Sub-step 6 Part 4: Creating the Final Table - the Constrainted Node mapping 3
 
-In this stage, we first compiled all activities identified in previous stages, then mapped them manually to align these elements with appropriate SNOMED CT concepts.
+In this sub-step, we first compiled all activities identified in previous sub-steps, then mapped them manually to align these elements with appropriate SNOMED CT concepts.
 
 To replicable results in your project: Execute the scripts located in the `Step03_Stage06_Part04_L_CNM3` directory.
 
 
 
-## Stage 6 Part 5: Creating the Final Table - the Constrainted Node mapping 4 part 1
+## Sub-step 6 Part 5: Creating the Final Table - the Constrainted Node mapping 4 part 1
 
-In this stage, we created a table to map Activity to Activity_Domain.
+In this sub-step, we created a table to map Activity to Activity_Domain.
 
 
 To replicable results in your project: Execute the scripts located in the `Step03_Stage06_Part05_M_CNM4_1` directory.
 
 
-## Stage 6 Part 6: Creating the Final Table - the Constrainted Node mapping 4 part 2
+## Sub-step 6 Part 6: Creating the Final Table - the Constrainted Node mapping 4 part 2
 
-In this stage, we mapped manually Activity_Domain to SNOMEDCT_ID.
+In this sub-step, we mapped manually Activity_Domain to SNOMEDCT_ID.
 
 To replicable results in your project: Execute the scripts located in the `Step03_Stage06_Part06_M_CNM4_2` directory.
 
@@ -560,7 +560,7 @@ To replicable results in your project: Execute the scripts located in the `Step0
 # Step 4: Creation of Tables Related to ICD Codes
 
 
-## Stage 1: ICD Code Correction
+## Sub-step 1: ICD Code Correction
 
 The table below illustrates the existing issues with ICD codes in the MIMIC-IV dataset and the goals for correcting these issues:
 
@@ -574,15 +574,15 @@ The table below illustrates the existing issues with ICD codes in the MIMIC-IV d
 We export all ICD codes, along with their version and title, from MIMIC-IV and correct the codes using data crawling for mapping and comparing MIMIC-IV ICD codes to the [ICD10Data.com](http://www.icd10data.com) website. However, some ICD codes required a manual approach. The final corrected ICD codes are stored in the directory `Step04_Stage01_icdCodeCorrection` as `Script4_ICD_Correction.csv`. Scripts located insite that directory need to be executed to import a table called `mapper` into your project on Google BigQuery.
 
 
-## Stage 2: Implementing ICD Code Correction
+## Sub-step 2: Implementing ICD Code Correction
 
-Utilizing the mapper table imported in previous stage, we proceed to correct the ICD codes within our project. This correction is achieved by executing the script located in `Step04_Stage02_implentationIcdCodeCorrection`. This script ensures that all ICD codes are updated to reflect accurate and standardized medical coding, aligning the dataset for better reliability and analysis. The corrected table is stored in the `icdCM3` and `icdCM4` tables of the `O_NonEvents_ICD6` database.
+Utilizing the mapper table imported in previous sub-step, we proceed to correct the ICD codes within our project. This correction is achieved by executing the script located in `Step04_Stage02_implentationIcdCodeCorrection`. This script ensures that all ICD codes are updated to reflect accurate and standardized medical coding, aligning the dataset for better reliability and analysis. The corrected table is stored in the `icdCM3` and `icdCM4` tables of the `O_NonEvents_ICD6` database.
 
 
 
-## Stage 3 - Part1 : Creating the Final Table - the ICD
+## Sub-step 3 - Part1 : Creating the Final Table - the ICD
 
-In this stage, we create final ICD table that Contains essential ICD code information.
+In this sub-step, we create final ICD table that Contains essential ICD code information.
 
 - **Columns**:
   - `ClinicalEntity`: A fixed value, "ICD".
@@ -595,23 +595,23 @@ To replicable results in your project: Execute the scripts located in the `Step0
 
 
 
-## Stage 3 - Part2 : Creating the Final Table - the Constrainted Node mapping 1 
+## Sub-step 3 - Part2 : Creating the Final Table - the Constrainted Node mapping 1 
 
-In this stage, we created the relationship table between `Disorder ID` and `ICD codes`. Since in MIMIC-IV disorders were already coded in ICD codes, we created 1759 hypothetical disorder names for each root ICD code, from `D1`, `D2` to `D1759`. The IDs range from 1 to 1759.
-
-To replicable results in your project: Execute the scripts located in the `Step04_Stage03_Part03_K_CNM2` directory.
-
-
-
-## Stage 3 - Part3 : Creating the Final Table - the Constrainted Node mapping 2 
-
-In this stage, we utilized the mapper created in the input step with the OHDSI Athena vocabulary system to map ICD codes to SNOMED CT. This automated mapping covers the majority of the codes. For ICD codes that are not covered by the OHDSI Athena mapping, a manual approach is applied to ensure comprehensive coverage and accuracy.
+In this sub-step, we created the relationship table between `Disorder ID` and `ICD codes`. Since in MIMIC-IV disorders were already coded in ICD codes, we created 1759 hypothetical disorder names for each root ICD code, from `D1`, `D2` to `D1759`. The IDs range from 1 to 1759.
 
 To replicable results in your project: Execute the scripts located in the `Step04_Stage03_Part03_K_CNM2` directory.
 
-## Stage 3 - Part4 :  Creating the Final Table - the Constrainted Node mapping 5
 
-In this stage, we create all the necessary tables for constructing a supervised dataset that facilitates building the `constrained node mapping 5` model. The model needs to be able to map **Activity_Value_ID** (as an identifier), with **Activity_Attribute** (as feature names), and **Activity_Attribute_Value** (as feature values), to **Disorders** (as classes). We can also add timestamps to them for time-series analysis.
+
+## Sub-step 3 - Part3 : Creating the Final Table - the Constrainted Node mapping 2 
+
+In this sub-step, we utilized the mapper created in the input step with the OHDSI Athena vocabulary system to map ICD codes to SNOMED CT. This automated mapping covers the majority of the codes. For ICD codes that are not covered by the OHDSI Athena mapping, a manual approach is applied to ensure comprehensive coverage and accuracy.
+
+To replicable results in your project: Execute the scripts located in the `Step04_Stage03_Part03_K_CNM2` directory.
+
+## Sub-step 3 - Part4 :  Creating the Final Table - the Constrainted Node mapping 5
+
+In this sub-step, we create all the necessary tables for constructing a supervised dataset that facilitates building the `constrained node mapping 5` model. The model needs to be able to map **Activity_Value_ID** (as an identifier), with **Activity_Attribute** (as feature names), and **Activity_Attribute_Value** (as feature values), to **Disorders** (as classes). We can also add timestamps to them for time-series analysis.
 
 This step consists of four tables:
 
@@ -626,7 +626,7 @@ To replicate results in your project, execute the scripts located in the `Step04
 
 # Step 5: Creation of Tables Related to Entity Activities
 
-## Stage 1: Attributes Preparation
+## Sub-step 1: Attributes Preparation
 
 In this step, we created tables needed for entity attributes.
 
@@ -654,15 +654,15 @@ To replicate results in your project, execute the scripts located in the `Step05
 
 
 
-## Stage 2 Part 1: Creating the Final Table - the Entities Attributes
+## Sub-step 2 Part 1: Creating the Final Table - the Entities Attributes
 
-In this step, we utilize tables created in the previous stage to create the final entities attributes table.
+In this step, we utilize tables created in the previous sub-step to create the final entities attributes table.
 
 To replicate results in your project, execute the scripts located in the `Step05_Stage02_Part01_EntitiesAttributes` directory.
 
-## Stage 2 Part 2: Creating the Final Table - the Entities Attribute Relationship
+## Sub-step 2 Part 2: Creating the Final Table - the Entities Attribute Relationship
 
-In this step, we utilize tables created in the previous stage to create the final entities attribute relationship table.
+In this step, we utilize tables created in the previous sub-step to create the final entities attribute relationship table.
 
 To replicate results in your project, execute the scripts located in the `Step05_Stage02_Part02_EntitiesAttributeRel` directory.
 
@@ -671,9 +671,9 @@ To replicate results in your project, execute the scripts located in the `Step05
 
 
 
-## Stage 1: Refining SNOMED CT Data
+## Sub-step 1: Refining SNOMED CT Data
 
-In this stage, we refined the integration of SNOMED CT data by focusing on the descriptions and relationships established in previous stages. We considered those SNOMED CT codes that were mapped from Activities, Activities domain, and ICD to SNOMED CT codes up to the root concept.
+In this sub-step, we refined the integration of SNOMED CT data by focusing on the descriptions and relationships established in previous Sub-steps. We considered those SNOMED CT codes that were mapped from Activities, Activities domain, and ICD to SNOMED CT codes up to the root concept.
 
 - **Data Selection**:
     - SNOMED CT codes that were successfully mapped.
@@ -683,15 +683,15 @@ In this stage, we refined the integration of SNOMED CT data by focusing on the d
 
 To replicate results in your project, execute the scripts located in the `Step06_Stage01_SCT_Refinement` directory.
 
-## Stage 2 Part 1: Creating the Final Table - The SNOMED CT Node
+## Sub-step 2 Part 1: Creating the Final Table - The SNOMED CT Node
 
-In this step, we utilize the SNOMED CT Node table created in Stage 1.
+In this step, we utilize the SNOMED CT Node table created in Sub-step 1.
 
 To replicate results in your project, execute the scripts located in the `Step06_Stage02_Part01_SCT_Node` directory.
 
-## Stage 2 Part 2: Creating the Final Table - The SNOMED CT Node Relationships
+## Sub-step 2 Part 2: Creating the Final Table - The SNOMED CT Node Relationships
 
-In this step, we utilize the SNOMED CT Node Relationship table created in Stage 1.
+In this step, we utilize the SNOMED CT Node Relationship table created in Sub-step 1.
 
 To replicate results in your project, execute the scripts located in the `Step06_Stage02_Part02_SCT_REL` directory.
 
