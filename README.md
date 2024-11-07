@@ -695,7 +695,7 @@ In this step, we utilize the SNOMED CT Node Relationship table created in Stage 
 
 To replicate results in your project, execute the scripts located in the `Step06_Stage02_Part02_SCT_REL` directory.
 
-# Step 7: Creation of Tables Related to Clustering
+# Step 7: Creation of Cluster Reference Tables
 
 This step includes the creation of two tables that facilitate clustering the dataset if the goal is to use specific parts of it.
 
@@ -713,7 +713,7 @@ This step includes the creation of two tables that facilitate clustering the dat
   - Number of disorders across all admissions.
   - Number of admissions.
 
-To replicate results in your project, execute the scripts located in the `Step07_ClusteringTables` directory.
+To replicate results in your project, execute the scripts located in the `Step07_ClusterReferencesTables` directory.
 
 
 
