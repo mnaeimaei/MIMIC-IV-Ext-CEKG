@@ -12,7 +12,7 @@ client = bigquery.Client()
 # Perform a query.
 query1 = f'''            
 
-CREATE TABLE `your-project-id1234.G_mimiciv_ext_cekg.N_ClusteringMethod1`  AS
+CREATE TABLE `your-project-id1234.G_mimiciv_ext_cekg.N_ClusterReference1`  AS
 SELECT distinct 
 subject_id	temp_patient_id ,
 MC_num as Morbid_num,
@@ -22,7 +22,7 @@ anchor_age,
 dod
 FROM `your-project-id1234.O_NonEvents_ClusData.Q07_AdmissionPatientHadm`   ;
 
-CREATE TABLE `your-project-id1234.G_mimiciv_ext_cekg.N_ClusteringMethod2`  AS    
+CREATE TABLE `your-project-id1234.G_mimiciv_ext_cekg.N_ClusterReference2`  AS    
 SELECT distinct 
 subject_id	temp_patient_id ,
 hadm_id temp_encounter_id,
