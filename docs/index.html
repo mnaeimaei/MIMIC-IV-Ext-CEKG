@@ -66,21 +66,36 @@
     <main id="content">
         <section>
             <h1>MIMIC-IV-Ext-CEKG</h1>
-            <p>The main goal of introducing MIMIC-IV-Ext-CEKG is to deploy it in process mining, particularly in
-                multi-entity or object-centric process mining, with a focus on building the clinical event knowledge
-                graph.
-                Given that the MIMIC-IV dataset is widely used in data mining and machine learning approaches,
-                MIMIC-IV-Ext-CEKG, being derived from MIMIC-IV, can similarly be applied to data mining and machine
-                learning
-                tasks.</p>
 
+            <p>
+                The <strong>MIMIC-IV-Ext-CEKG</strong> dataset is a curated extension of the MIMIC-IV dataset,
+                comprising 19 integrated tables.
+                MIMIC-IV contains clinical data collected from 2008 to 2019 for patients admitted to intensive care
+                units (ICUs) at
+                Beth Israel Deaconess Medical Center in Boston, Massachusetts.
+            </p>
 
-            <p>The MIMIC-IV-Ext-CEKG dataset contains one dataset, which includes 19 tables extracted from the MIMIC-IV
-                dataset. The MIMIC-IV dataset includes data from 2008 to 2019 for patients who had intensive care unit
-                (ICU)
-                admissions at Beth Israel Deaconess Medical Center in Boston, Massachusetts.</p>
-
-
+            <h2>Key Characteristics of MIMIC-IV-Ext-CEKG</h2>
+            <ul>
+                <li>No preprocessing required for process mining, machine learning, or data mining tasks.</li>
+                <li>Object-centric dataset built using five distinct objects, suitable for object-centric and
+                    multi-dimensional process mining.
+                </li>
+                <li>Time series-compatible data structure, ideal for time series analysis and machine learning
+                    applications.
+                </li>
+                <li>Supports construction of Event Knowledge Graphs.</li>
+                <li>Corrected National Drug Codes (NDC) from the original dataset for improved accuracy.</li>
+                <li>Includes 95 distinct clinical activities, covering a wide range from lab tests and diagnoses to
+                    monitoring and discharge activities, each with rich features and values.
+                </li>
+                <li>ICD-9 codes from the original dataset are corrected and mapped to ICD-10 for better interpretability
+                    and global compatibility.
+                </li>
+                <li>Integration of SNOMED CT codes, which are not available in the original MIMIC dataset, enabling
+                    standardized terminology use.
+                </li>
+            </ul>
         </section>
     </main>
 </div>
