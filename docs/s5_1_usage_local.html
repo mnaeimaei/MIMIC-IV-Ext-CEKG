@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIMIC-IV-Ext-CEKG Documentation</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <img src="img/logo.png" alt="MIMIC-IV-Ext-CEKG Logo">
+            <h2>Table of Contents:</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="index.html">Overview</a></li>
+
+
+            <li><a href="s2_Activities_and_their_attribute_names.html">General Overview of the Dataset</a></li>
+
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">Table-by-Table Descriptions ▸</a>
+                <ul class="submenu">
+                    <li><a href="s3_01_EventLog.html">EventLog</a></li>
+                    <li><a href="s3_02_EntitiesAttributes.html">Entities Attributes</a></li>
+                    <li><a href="s3_03_EntitiesAttributeRel.html">Entities Attribute Rel</a></li>
+                    <li><a href="s3_04_ActivityAttributes.html">Activity Attributes</a></li>
+                    <li><a href="s3_05_ActivitiesDomain.html">Activities Domain</a></li>
+                    <li><a href="s3_06_ICD.html">ICD</a></li>
+                    <li><a href="s3_07_SCT_Node.html">SCT Node</a></li>
+                    <li><a href="s3_08_SCT_REL.html">SCT REL</a></li>
+                    <li><a href="s3_09_CNM1.html">CNM 1</a></li>
+                    <li><a href="s3_10_CNM2.html">CNM 2</a></li>
+                    <li><a href="s3_11_CNM3.html">CNM 3</a></li>
+                    <li><a href="s3_12_CNM4_1.html">CNM4 1</a></li>
+                    <li><a href="s3_13_CNM4_2.html">CNM4 2</a></li>
+                    <li><a href="s3_14_CNM5_Activity_Instance_ID.html">CNM5 Activity Instance ID</a></li>
+                    <li><a href="s3_15_CNM5_Activity_Instance_ID_with_class.html">CNM5 Activity Instance ID with class
+                    </a></li>
+                    <li><a href="s3_16_CNM5_Activity_Instance_ID_with_features.html">CNM5 Activity Instance ID with
+                        features</a></li>
+                    <li><a href="s3_17_CNM5_class.html">CNM5 class</a></li>
+                    <li><a href="s3_18_ClusterReference1.html">Cluster Reference 1</a></li>
+                    <li><a href="s3_19_ClusterReference2.html">Cluster Reference 2</a></li>
+                </ul>
+            </li>
+            <li><a href="s4-dataset-access.html">Dataset Access</a></li>
+            <li class="has-submenu">
+                <a href="#" class="submenu-toggle">Dataset Setup Guide ▸</a>
+                <ul class="submenu">
+                    <li><a href="s5_1_usage_local.html" class="active">Local Setup</a></li>
+                    <li><a href="s5_2_usage_googleC.html">Google Cloud Setup</a></li>
+                </ul>
+            </li>
+
+            <li><a href="s6-cite.html">Usage Policy</a></li>
+
+        </ul>
+    </nav>
+    <main id="content">
+        <section>
+            <h1>Local Setup: Using the Dataset with MySQL or MariaDB</h1>
+            <p>This page explains how to set up the MIMIC-IV-Ext-CEKG dataset locally on your computer. However, due to
+                the large volume of the dataset, using Google Cloud is recommended. To use the dataset locally, ensure
+                that:</p>
+            <ul>
+                <li>A local RDBMS (such as MySQL or MariaDB) is installed on your computer.</li>
+                <li>A local database administration tool (such as phpMyAdmin, DataGrip, etc.) is installed and
+                    configured.
+                </li>
+                <li>Fulfill all the steps for <a href="s4-dataset-access.html">dataset access</a>.</li>
+
+
+            </ul>
+            <p>Once your local environment is ready, follow the steps provided to import and use the dataset for
+                simulation, analysis, or application development.</p>
+
+
+            <h2>Step1. Download the dataset files:</h2>
+
+
+            <p>Go to the dataset <a href="https://doi.org/10.13026/qr9d-6t52" target="_blank">paper page</a> and
+                download the dataset from the bottom of the page.</p>
+
+
+            <h2>Step2. Unzip each required table.</h2>
+
+
+            <h2>Step3. Create a database named:</h2>
+
+
+            <pre><code class="language-sql">CREATE SCHEMA MimicCEKG;</code></pre>
+
+            <h2>Step 4: Import the Tables</h2>
+
+            <p>Execute the following queries to import the corresponding table into your local database administration tool.</p>
+
+
+
+            <h3>Table: EventLog</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/B_EventLog.csv'
+INTO TABLE B_EventLog
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Event_ID, Timestamps, Activity, Activity_Synonym, Activity_Attributes_ID, Activity_Instance_ID, Entity1_Origin, Entity1_ID, Entity2_Origin, Entity2_ID, Entity3_Origin, Entity3_ID, Entity4_Origin, Entity4_ID, Entity5_Origin, Entity5_ID, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.B_EventLog (
+Event_ID VARCHAR(255),
+Timestamps DATETIME,
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Attributes_ID VARCHAR(255),
+Activity_Instance_ID VARCHAR(255)
+Entity1_Origin VARCHAR(255),
+Entity1_ID INT,
+Entity2_Origin VARCHAR(255),
+Entity2_ID INT,
+Entity3_Origin VARCHAR(255),
+Entity3_ID INT,
+Entity4_Origin VARCHAR(255),
+Entity4_ID INT,
+Entity5_Origin VARCHAR(255),
+Entity5_ID INT,
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: EntitiesAttributes</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/C_EntitiesAttributes.csv'
+INTO TABLE C_EntitiesAttributes
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Origin, ID, Name, Value, Category, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.C_EntitiesAttributes (
+Origin VARCHAR(255),
+ID INT,
+Name VARCHAR(255),
+Value VARCHAR(255),
+Category VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id INT
+);
+            </code></pre>
+
+
+            <h3>Table: EntitiesAttributeRel</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/D_EntitiesAttributeRel.csv'
+INTO TABLE D_EntitiesAttributeRel
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Origin1, ID1, Origin2, ID2, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.D_EntitiesAttributeRel (
+Origin1 VARCHAR(255),
+ID1 VARCHAR(255),
+Origin2 VARCHAR(255),
+ID2 VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255)
+);
+
+            </code></pre>
+
+
+            <h3>Table: ActivityAttributes</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/E_ActivityAttributes.csv'
+INTO TABLE E_ActivityAttributes
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Attributes_ID, Activity, Activity_Synonym, Activity_Attribute, Activity_Attribute_Value, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.E_ActivityAttributes (
+Activity_Attributes_ID VARCHAR(255),
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Attribute VARCHAR(255),
+Activity_Attribute_Value VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: ActivitiesDomain</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/F_ActivitiesDomain.csv'
+INTO TABLE F_ActivitiesDomain
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Domain);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.F_ActivitiesDomain (
+Activity_Domain VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: ICD</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/G_ICD.csv'
+INTO TABLE G_ICD
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(ICD_Origin, ICD_Code, ICD_Version, ICD_Code_title);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.G_ICD (
+ICD_Origin VARCHAR(255),
+ICD_Code VARCHAR(255),
+ICD_Version VARCHAR(255),
+ICD_Code_title VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: SCT_Node</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/H_SCT_Node.csv'
+INTO TABLE H_SCT_Node
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(SCT_ID, SCT_Code, SCT_DescriptionA_Type1, SCT_DescriptionA_Type2, SCT_DescriptionB, SCT_Semantic_Tags, SCT_Type, SCT_Level);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.H_SCT_Node (
+SCT_ID INT,
+SCT_Code INT,
+SCT_DescriptionA_Type1 VARCHAR(255),
+SCT_DescriptionA_Type2 VARCHAR(255),
+SCT_DescriptionB VARCHAR(255),
+SCT_Semantic_Tags VARCHAR(255),
+SCT_Type VARCHAR(255),
+SCT_Level VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: SCT_REL</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/H_SCT_REL.csv'
+INTO TABLE H_SCT_REL
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(SCT_ID_1, SCT_Code_1, SCT_ID_2, SCT_Code_2);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.H_SCT_REL (
+SCT_ID_1 INT,
+SCT_Code_1 INT,
+SCT_ID_2 INT,
+SCT_Code_2 INT
+);
+            </code></pre>
+
+
+            <h3>Table: CNM1</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/I_CNM1.csv'
+INTO TABLE I_CNM1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Disorder_ID, ICD_Code);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.I_CNM1 (
+Disorder_ID INT,
+ICD_Code VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: CNM2</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/J_CNM2.csv'
+INTO TABLE J_CNM2
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(ICD_Code, SCT_ID);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.J_CNM2 (
+ICD_Code VARCHAR(255),
+SCT_ID VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: CNM3</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/K_CNM3.csv'
+INTO TABLE K_CNM3
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity, Activity_Synonym, SCT_ID, SCT_Code);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.K_CNM3 (
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+SCT_ID INT,
+SCT_Code INT
+);
+            </code></pre>
+
+
+            <h3>Table: CNM4_1</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/L_CNM4_1.csv'
+INTO TABLE L_CNM4_1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity, Activity_Synonym, Activity_Domain);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.L_CNM4_1 (
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Domain VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: CNM4_2</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/L_CNM4_2.csv'
+INTO TABLE L_CNM4_2
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Domain, SCT_ID, SCT_Code);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.L_CNM4_2 (
+Activity_Domain VARCHAR(255),
+SCT_ID INT,
+SCT_Code INT
+);
+            </code></pre>
+
+
+            <h3>Table: CNM5_Activity_Instance_ID</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID (
+Activity_Instance_ID VARCHAR(255)
+);
+            </code></pre>
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Class_Part1</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_class_part1.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_class_part1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Disorder_Name, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_class_part1 (
+Activity_Instance_ID VARCHAR(255),
+Disorder_Name VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255)
+);
+            </code></pre>
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Class_Part2</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_class_part2.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_class_part2
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Disorder_Name, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_class_part2 (
+Activity_Instance_ID VARCHAR(255),
+Disorder_Name VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255)
+);
+            </code></pre>
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Class_Part3</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_class_part3.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_class_part3
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Disorder_Name, temp_patient_id, temp_encounter_id);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_class_part3 (
+Activity_Instance_ID VARCHAR(255),
+Disorder_Name VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255)
+);
+            </code></pre>
+
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Features_Part1</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_features_part1.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_features_part1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Activity, Activity_Synonym, Activity_Attribute, Activity_Attribute_Value, temp_patient_id, temp_encounter_id, Timestamps);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_features_part1 (
+Activity_Instance_ID VARCHAR(255),
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Attribute VARCHAR(255),
+Activity_Attribute_Value VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255),
+Timestamps DATETIME
+);
+            </code></pre>
+
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Features_Part2</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_features_part2.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_features_part2
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Activity, Activity_Synonym, Activity_Attribute, Activity_Attribute_Value, temp_patient_id, temp_encounter_id, Timestamps);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_features_part2 (
+Activity_Instance_ID VARCHAR(255),
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Attribute VARCHAR(255),
+Activity_Attribute_Value VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255),
+Timestamps DATETIME
+);
+            </code></pre>
+
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Features_Part3</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_features_part3.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_features_part3
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Activity, Activity_Synonym, Activity_Attribute, Activity_Attribute_Value, temp_patient_id, temp_encounter_id, Timestamps);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_features_part3 (
+Activity_Instance_ID VARCHAR(255),
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Attribute VARCHAR(255),
+Activity_Attribute_Value VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255),
+Timestamps DATETIME
+);
+            </code></pre>
+
+
+            <h3>Table: CNM5_Activity_Instance_ID_with_Features_Part4</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_Activity_Instance_ID_with_features_part4.csv'
+INTO TABLE M_CNM5_Activity_Instance_ID_with_features_part4
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Activity_Instance_ID, Activity, Activity_Synonym, Activity_Attribute, Activity_Attribute_Value, temp_patient_id, temp_encounter_id, Timestamps);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_Activity_Instance_ID_with_features_part4 (
+Activity_Instance_ID VARCHAR(255),
+Activity VARCHAR(255),
+Activity_Synonym VARCHAR(255),
+Activity_Attribute VARCHAR(255),
+Activity_Attribute_Value VARCHAR(255),
+temp_patient_id INT,
+temp_encounter_id VARCHAR(255),
+Timestamps DATETIME
+);
+            </code></pre>
+
+
+            <h3>Table: CNM5_class</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/M_CNM5_class.csv'
+INTO TABLE M_CNM5_class
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(Disorder_Name, Disorder_ID);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.M_CNM5_class (
+Disorder_Name VARCHAR(255),
+Disorder_ID INT
+);
+            </code></pre>
+
+
+            <h3>Table: ClusterReference1</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/N_ClusterReference1.csv'
+INTO TABLE N_ClusterReference1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(temp_patient_id, Morbid_num, Admission_num, gender, anchor_age, dod);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.N_ClusterReference1 (
+temp_patient_id INT,
+Morbid_num INT,
+Admission_num INT,
+gender INT,
+anchor_age INT,
+dod INT
+);
+            </code></pre>
+
+            <h3>Table: ClusterReference2</h3>
+
+            <pre><code class="language-sql">LOAD DATA LOCAL INFILE '/path/to/N_ClusterReference2.csv'
+INTO TABLE N_ClusterReference2
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(temp_patient_id, temp_encounter_id, ICD10_Code, ICD10_Code_Root, ICD10_Code_title, ICD10_Code_Root_title, Morbid_num, Admission_num);
+            </code></pre>
+
+            <pre><code class="language-sql">CREATE TABLE MimicCEKG.N_ClusterReference2 (
+temp_patient_id INT,
+temp_encounter_id INT,
+ICD10_Code VARCHAR(255),
+ICD10_Code_Root VARCHAR(255),
+ICD10_Code_title VARCHAR(255),
+ICD10_Code_Root_title VARCHAR(255),
+Morbid_num INT,
+Admission_num INT
+);
+            </code></pre>
+
+
+        </section>
+    </main>
+</div>
+<script src="js/script.js"></script>
+</body>
+</html>
