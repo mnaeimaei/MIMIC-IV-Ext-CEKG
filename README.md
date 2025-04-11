@@ -1,4 +1,16 @@
-# Reproducibility of the MIMIC-IV-Ext-CEKG Dataset
+# Explore the dataset website (overview, table-by-table descriptions, data access, setup instructions, and usage policy):
+https://mnaeimaei.github.io/MIMIC-IV-Ext-CEKG/
+
+# For doing Reproducibility of the MIMIC-IV-Ext-CEKG Dataset:
+Please go to Reproducibility.md
+
+# Access the publication: 
+https://doi.org/10.13026/wqvp-h188
+
+
+](https://doi.org/10.13026/wqvp-h188)
+Explore the dataset website: https://lnkd.in/gsrBra_W
+Access the publication: https://lnkd.in/gg4iJQcS 
 
 This README file explains how to reproduce the MIMIC-IV-Ext-CEKG dataset as it is in the published version.
 
