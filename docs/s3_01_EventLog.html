@@ -121,7 +121,7 @@
                         <li>All values for <strong style="color:black;">Entity1_origin</strong> are
                             <strong>Patients</strong>.
                         </li>
-                        <li><strong>Entity1_ID</strong> has <strong>82,484 distinct patient IDs</strong>.</li>
+                        <li><strong>Entity1_ID</strong> has <strong>282,484 distinct patient IDs</strong>.</li>
                     </ul>
                 </li>
                 <li><strong style="color:blue;">Entity2_origin</strong> and <strong
@@ -179,6 +179,14 @@
                     as after clustering.
                     <ul>
                         <li>Exclude these columns when generating the final CEKG event log.</li>
+                        </li>
+                        <li><strong>temp_patient_id</strong> is the equivalent of <strong>Entity1_ID</strong>.</li>
+                        </li>
+                        <li><strong>temp_encounter_id</strong> is equivalent to <strong>Entity2_ID</strong> or <strong>Entity3_ID</strong>, whichever is not null.</li>
+                        </li>
+                        <li><strong>temp_patient_id</strong> has <strong>282,484 distinct patient IDs</strong>.</li>
+                        </li>
+                        <li><strong>temp_encounter_id</strong> has <strong>999,112 distinct patient IDs</strong>.</li>
                     </ul>
                 </li>
             </ul>
