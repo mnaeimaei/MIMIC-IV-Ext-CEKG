@@ -174,7 +174,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><strong style="color:blue;">temp_patient_id</strong> and <strong
+<li><strong style="color:blue;">temp_patient_id</strong> and <strong
                         style="color:blue;">temp_encounter_id:</strong> These are helper columns for subset analysis,
                     such
                     as after clustering.
@@ -183,7 +183,13 @@
                         </li>
                         <li><strong>temp_patient_id</strong> is the equivalent of <strong>Entity1_ID</strong>.</li>
                         </li>
-                        <li><strong>temp_encounter_id</strong> is equivalent to <strong>Entity2_ID</strong> or <strong>Entity3_ID</strong>, whichever is not null.</li>
+                        <li>
+                            <strong>temp_encounter_id</strong>
+                            <ul>
+                                <li>is equivalent to <strong>Entity2_ID</strong> if <strong>Entity1_ID</strong> is null.</li>
+                                <li>is equivalent to <strong>Character "O" + Entity1_ID</strong> if <strong>Entity2_ID</strong> is null.</li>
+                            </ul>
+                        </li          
                         </li>
                         <li><strong>temp_patient_id</strong> has <strong>282,484 distinct patient IDs</strong>.</li>
                         </li>
